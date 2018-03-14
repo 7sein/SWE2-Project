@@ -1,10 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Getting Started: Serving Web Content</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
-    <h1> Store Owner Profile </h1>
+
+
+<form method="Post" th:action="@{/addstore}" th:object="${Store}">
+
+    <input type="text" th:field="*{Name}" placeholder="Store Name" required>
+    <input type="text" th:field="*{Location}" placeholder="Store Location" required>
+    <input type="text" th:field="*{Type}" placeholder="Store Type" required>
+    <input type="submit" value="Add Store">
+
+</form>
+
 </body>
 </html>

@@ -5,9 +5,13 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
-public interface UserRepository extends CrudRepository<User, Long>{
+public interface StoreRepository extends CrudRepository<Store, Long>{
 
-    @Query("select u from User u where u.UserName = ?1")
-    List<User> findByName(String UserName);
+    @Query("select u from User u where u.Name = ?1")
+    List<Store> findByName(String Name);
+
 
 }
+
+
+
