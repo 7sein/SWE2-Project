@@ -6,18 +6,19 @@ import javax.persistence.*;
 public class Product {
 
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
-    Long Id;
+    int Id;
 
-    String Name, Category;
+    String Name;
+    String Category;
     double Price;
-
-    public Product(String Name, String Category, double Price){
+    public Product(){};
+    public Product(String Name, String Category,Brand brand ,double Price){
         this.Name = Name;
         this.Category = Category;
         this.Price = Price;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         Id = id;
     }
 
@@ -33,15 +34,13 @@ public class Product {
         Price = price;
     }
 
-    public Long getId(){ return Id; }
+    public int getId(){ return Id; }
     public String getName(){
         return Name;
     }
-
     public String getCategory(){
         return Category;
     }
-
     public double getPrice(){
         return Price;
     }

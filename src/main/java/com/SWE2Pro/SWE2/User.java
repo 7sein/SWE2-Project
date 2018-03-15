@@ -1,10 +1,7 @@
 package com.SWE2Pro.SWE2;
 
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class User {
@@ -14,13 +11,13 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long Id;
-    protected String name;
+    protected String Name;
     protected String UserName, Password, Type;
 
     public User(){}
 
     public User(String Name, String UserName, String Password){
-        this.name = Name;
+        this.Name = Name;
         this.UserName = UserName;
         this.Password = Password;
     }
@@ -34,7 +31,7 @@ public class User {
     }
 
     public void setName(String Name) {
-        this.name = Name;
+        this.Name = Name;
     }
 
     public void setUserName(String UserName) {
@@ -50,7 +47,7 @@ public class User {
     }
 
     public String getName(){
-        return name;
+        return Name;
     }
 
     public String getUserName(){

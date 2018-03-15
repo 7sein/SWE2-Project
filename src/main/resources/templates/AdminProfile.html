@@ -1,18 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Getting Started: Serving Web Content</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
+
+
     <form method="Post" th:action="@{/addProduct}" th:object="${Product}">
 
         <input type="text" th:field="*{Name}" placeholder="Product Name" required>
-        <input type="text" th:field="*{Category}" placeholder="Category" required>
-        <input type="number" th:field="*{Price}" placeholder="Price" required>
-
-        <input type="submit" value="add Product">
+        <input type="text" th:field="*{Category}" placeholder="Product Category" required>
+        <input type="text" th:field="*{Price}" placeholder="Product Price" required>
+        <input type="submit" value="Add Product">
 
     </form>
+
+    <form method="Post" th:action="@{/addBrand}" th:object="${Brand}">
+
+        <input type="text" th:field="*{Name}" placeholder="Brand Name" required>
+        <input type="text" th:field="*{Category}" placeholder="Brand Category" required>
+        <input type="submit" value="Add Brand">
+
+    </form>
+
 </body>
 </html>
