@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -53,14 +54,19 @@ public class UserController {
 
                 model.addAttribute("Store", new Store());
                 model.addAttribute("StoreProduct", new StoreProduct());
-                //model.addAttribute("myStores", );
+                List<Store> stores1 = SR.findAll();
+                //System.out.println(getStores(ret.get(0), stores1).size());
+                model.addAttribute("Stores", getStores(ret.get(0), stores1));
+                model.addAttribute("StoreProducts", new ArrayList<StoreProduct>());
 
                 s.getSession().setAttribute("owner" ,ret.get(0));
+
                 return "StoreOwnerProfile";
 
             } else{
 
-                model.addAttribute("Stores", SR.findAll());
+                model.addAttribute("Products", new ArrayList<Product>());
+                model.addAttribute("Stores",  SR.findAll());
                 //s.getSession().setAttribute("owner" ,usr);
                 return "CustomerProfile";
 
@@ -68,7 +74,7 @@ public class UserController {
 
         } else {
 
-            model.addAttribute("Stores", UR.findAll());
+           // model.addAttribute("Stores", UR.findAll());
             model.addAttribute("User", new User());
 
             return "index";
@@ -95,6 +101,22 @@ public class UserController {
         } else {
             return "index";
         }
+
+    }
+
+    public List<Store> getStores(User owner, List<Store> stores){
+
+        List<Store> stores1 = new ArrayList<>();
+
+        for(int i=0; i<stores.size(); ++i){
+
+            if(stores.get(i).getStoreOwner().equals(owner)){
+                stores1.add(stores.get(i));
+            }
+
+        }
+
+        return stores1;
 
     }
 

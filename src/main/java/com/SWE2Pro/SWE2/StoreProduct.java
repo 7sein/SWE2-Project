@@ -25,6 +25,22 @@ public class StoreProduct {
         UsersViews = 0;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (Id == null || obj == null || getClass() != obj.getClass())
+            return false;
+
+        StoreProduct that = (StoreProduct) obj;
+        return Id.equals(that.Id);
+
+    }
+    @Override
+    public int hashCode() {
+        return Id == null ? 0 : Id.hashCode();
+    }
+
     public Long getId() {
         return Id;
     }

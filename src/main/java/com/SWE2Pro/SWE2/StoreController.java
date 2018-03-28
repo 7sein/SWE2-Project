@@ -7,7 +7,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 public class StoreController {
@@ -40,12 +42,13 @@ public class StoreController {
         List<Store> stores = SR.findByName(sto.Name);
         model.addAttribute("Store", new Store());
         model.addAttribute("StoreProduct", new StoreProduct());
+        List<Store> stores1 = SR.findAll();
+        model.addAttribute("Stores", getStores((User)sessions.getSession().getAttribute("owner"), stores1));
+        model.addAttribute("StoreProducts", new ArrayList<StoreProduct>());
 
-        //System.out.println(sessions.getSession().getAttribute("owner"));
 
         if(stores.size() == 0){
             sto.setStoreOwner((User)sessions.getSession().getAttribute("owner"));
-            //System.out.println(sto.getStoreOwner().getId()+" "+sto.getStoreOwner().getPassword()+" "+sto.getStoreOwner().getName()+" ");
             SR.save(sto);
         }
 
@@ -55,32 +58,43 @@ public class StoreController {
     }
 
     @RequestMapping("/showStore/{storeName}")
-    public String showStore(Model model, @PathVariable String storeName){
-        model.addAttribute("products", SPR.findByStore(storeName));
+    public String showStore(Model model, @PathVariable String storeName) {
+        model.addAttribute("Products", SPR.findByStore(storeName));
+        model.addAttribute("Stores",  SR.findAll());
         return "CustomerProfile";
     }
 
     @GetMapping("/addProductToStore")
-    public String addProductToStore(Model model){
+    public String addProductToStore(Model model, HttpServletRequest sessions){
         model.addAttribute("Store", new Store());
         model.addAttribute("StoreProduct", new StoreProduct());
+        List<Store> stores1 = SR.findAll();
+        model.addAttribute("Stores", getStores((User)sessions.getSession().getAttribute("owner"), stores1));
+        model.addAttribute("StoreProducts", new ArrayList<StoreProduct>());
+
+
+        List<Store> stores = SR.findAll();
+        model.addAttribute("Stores", getStores(((User)sessions.getSession().getAttribute("owner")), stores));
         return "StoreOwnerProfile";
+
     }
 
     @PostMapping("/addProductToStore")
-    public String addProductToStore1(@ModelAttribute @Valid StoreProduct SP, Model model) {
+    public String addProductToStore1(@ModelAttribute @Valid StoreProduct SP, Model model, HttpServletRequest sessions) {
 
         model.addAttribute("Store", new Store());
         model.addAttribute("StoreProduct", new StoreProduct());
+        List<Store> stores1 = SR.findAll();
+        model.addAttribute("Stores", getStores((User)sessions.getSession().getAttribute("owner"), stores1));
+        model.addAttribute("StoreProducts", new ArrayList<Store>());
+
 
         List<Product> products = PR.findByName(SP.Product);
         List<Brand>   brands   = BR.findByName(SP.Brand);
         List<Store>   stores   = SR.findByName(SP.Store);
 
-        //System.out.println(products.size()+" "+brands.size()+" "+stores.size());
 
         if(products.size() == 0 || brands.size() == 0 || stores.size() == 0) {
-            //System.out.println("OUT");
             return "StoreOwnerProfile";
         }
 
@@ -91,6 +105,22 @@ public class StoreController {
         SPR.save(SP);
 
         return "StoreOwnerProfile";
+
+    }
+
+    public List<Store> getStores(User owner, List<Store> stores){
+
+        List<Store> stores1 = new ArrayList<>();
+
+        for(int i=0; i<stores.size(); ++i){
+
+            if(stores.get(i).getStoreOwner().equals(owner)){
+                stores1.add(stores.get(i));
+            }
+
+        }
+
+        return stores1;
 
     }
 

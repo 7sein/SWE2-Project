@@ -26,5 +26,27 @@
     </form>
 
 
+
+    <ul>
+        <li th:each="Store: ${Stores}" >
+            <a th:href="'/storeOwner/showStore/'+${Store.Name}" th:text="${Store.Name}"></a>
+        </li>
+    </ul>
+
+    <br><br>
+
+    <h2 th:if="${StoreProducts.size()}" th:text="${StoreProducts.get(0).Store}"></h2>
+
+    <ul>
+        <li th:each="StoreProduct: ${StoreProducts}">
+            <p th:text="'Name: '+${StoreProduct.Product}"></p>
+            <p th:text="'Views: '+${StoreProduct.UsersViews}"></p>
+            <p th:text="'Bought: '+${StoreProduct.BoughtProducts}"></p>
+        </li>
+    </ul>
+
+
+
+
 </body>
 </html>

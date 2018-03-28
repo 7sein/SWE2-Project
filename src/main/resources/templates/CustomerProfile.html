@@ -6,14 +6,21 @@
 </head>
 <body>
 
-    <ul th:each="Store: ${Stores}">
-        <a th:href=@{'/showStore/'+${Store.Name}} th:text=@{${Store.Name}}></a>
-        <p th:text=@{'UsersViews:'+${Store.UsersViews}}></p>
-        <p th:text=@{'BoughtProducts:'+${Store.BoughtProducts}}></p>
-    </ul>
     <ul>
-        <li th:each="Product: ${products}">
-            <h2 th:text="${Product.Name}"></h2>
+        <li th:each="Store: ${Stores}" >
+            <a th:href="'/showStore/'+${Store.Name}" th:text="${Store.Name}"></a>
+        </li>
+    </ul>
+
+    <br><br>
+
+    <h2 th:if="${Products.size()}" th:text="${Products.get(0).Store}"></h2>
+
+    <ul>
+        <li th:each="Product: ${Products}">
+            <p th:text="${Product.Product}"></p>
+            <a th:href="'/viewStoreProduct/'+${Product.Store}+'/'+${Product.Product}"> View </a>
+            <a th:href="'/buyStoreProduct/'+${Product.Store}+'/'+${Product.Product}+'/1'"> Buy </a>
         </li>
     </ul>
 
