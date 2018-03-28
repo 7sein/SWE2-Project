@@ -47,7 +47,7 @@ public class UserController {
             if(ret.get(0).Type.equals("Admin")) {
                 model.addAttribute("Product", new Product());
                 model.addAttribute("Brand", new Brand());
-                s.getSession().setAttribute("owner" ,usr);
+                //s.getSession().setAttribute("owner" ,usr);
                 return "AdminProfile";
             } else if(ret.get(0).Type.equals("StoreOwner")){
 
@@ -55,13 +55,13 @@ public class UserController {
                 model.addAttribute("StoreProduct", new StoreProduct());
                 //model.addAttribute("myStores", );
 
-                s.getSession().setAttribute("owner" ,usr);
+                s.getSession().setAttribute("owner" ,ret.get(0));
                 return "StoreOwnerProfile";
 
             } else{
 
                 model.addAttribute("Stores", SR.findAll());
-                s.getSession().setAttribute("owner" ,usr);
+                //s.getSession().setAttribute("owner" ,usr);
                 return "CustomerProfile";
 
             }

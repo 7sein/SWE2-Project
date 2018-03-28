@@ -20,6 +20,8 @@ public class StoreController {
     private BrandRepository BR;
     @Autowired
     private StoreProductRepository SPR;
+    @Autowired
+    private UserRepository UR;
 
 
 
@@ -39,8 +41,11 @@ public class StoreController {
         model.addAttribute("Store", new Store());
         model.addAttribute("StoreProduct", new StoreProduct());
 
+        //System.out.println(sessions.getSession().getAttribute("owner"));
+
         if(stores.size() == 0){
-            sto.storeOwner = (User) sessions.getSession().getAttribute("owner");
+            sto.setStoreOwner((User)sessions.getSession().getAttribute("owner"));
+            //System.out.println(sto.getStoreOwner().getId()+" "+sto.getStoreOwner().getPassword()+" "+sto.getStoreOwner().getName()+" ");
             SR.save(sto);
         }
 
@@ -69,10 +74,13 @@ public class StoreController {
         model.addAttribute("StoreProduct", new StoreProduct());
 
         List<Product> products = PR.findByName(SP.Product);
-        List<Product> brands   = PR.findByName(SP.Brand);
-        List<Product> stores   = PR.findByName(SP.Store);
+        List<Brand>   brands   = BR.findByName(SP.Brand);
+        List<Store>   stores   = SR.findByName(SP.Store);
+
+        //System.out.println(products.size()+" "+brands.size()+" "+stores.size());
 
         if(products.size() == 0 || brands.size() == 0 || stores.size() == 0) {
+            //System.out.println("OUT");
             return "StoreOwnerProfile";
         }
 

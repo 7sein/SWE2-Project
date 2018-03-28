@@ -12,8 +12,10 @@ public class StoreProduct {
     Long Id;
 
     int UsersViews;
-    String Brand, Product, Store;
     int BoughtProducts;
+
+    String Brand, Product, Store;
+
     int StoreID;
     int ProductID;
     int BrandID;

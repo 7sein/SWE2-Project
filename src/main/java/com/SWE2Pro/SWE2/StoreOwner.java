@@ -9,7 +9,7 @@ import java.util.Set;
 public class StoreOwner extends User {
 
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "storeOwner")
+    @OneToMany(cascade = CascadeType.ALL, targetEntity = Store.class, mappedBy = "storeOwner")
     private Set<Store> stores;
 
     public StoreOwner(){}
