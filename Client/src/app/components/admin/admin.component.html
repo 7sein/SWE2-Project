@@ -1,0 +1,25 @@
+<h2> add Product to the System </h2>
+<form (ngSubmit)="addProduct()">
+    
+    <input type="text" placeholder="Name" [(ngModel)]="Product.Name" name="ProductName"/> 
+    
+    <input type="text" placeholder="Category" [(ngModel)]="Product.Category" name="ProductCategory"/> 
+    
+    <input type="number" placeholder="Price" [(ngModel)]="Product.Price" name="ProductPrice"/> 
+    
+    <input type="submit" value="add" />
+    
+</form>
+
+<br><br><hr><br><br>
+
+<h2> add Brand to the System </h2>
+<form (ngSubmit)="addBrand()">
+    
+    <input type="text" placeholder="Name" [(ngModel)]="Brand.Name" name="BrandName" /> 
+    
+    <input type="text" placeholder="Category" [(ngModel)]="Brand.Category" name="BrandCategory"/> 
+    
+    <input type="submit" value="add" />
+    
+</form>

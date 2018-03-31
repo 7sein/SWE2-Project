@@ -1,0 +1,32 @@
+<h2> Sign Up </h2>
+<form (ngSubmit)="signUp()">
+    
+    <input type="text" placeholder="Name" [(ngModel)]="user1.Name" name="Name" /> 
+    
+    <input type="text" placeholder="User Name" [(ngModel)]="user1.UserName" name="UserName "/> 
+    
+    <input type="text" placeholder="Password" [(ngModel)]="user1.Password" name="Password "/> 
+    
+    <select [(ngModel)]="user1.Type" name="Type">
+        <option value="Customer"> Customer </option>
+        <option value="StoreOwner"> Store Owner </option>
+    </select>
+    
+    <input type="submit" value="Sign up" />
+    
+</form>
+
+<br><br><hr><br><br>
+
+<h2> Login </h2>
+<form (ngSubmit)="login()">
+    
+    <input type="text" placeholder="User Name" [(ngModel)]="user.UserName" name="UserName "/> 
+    
+    <input type="text" placeholder="Password" [(ngModel)]="user.Password" name="Password" /> 
+    
+    <input type="submit" value="login" />
+    
+</form>
+
+
