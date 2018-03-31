@@ -1,5 +1,7 @@
 package com.SWE2Pro.SWE2;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.*;
 
 @Entity
@@ -8,9 +10,13 @@ public class Product {
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     int Id;
 
+    @JsonProperty("Name")
     String Name;
+    @JsonProperty("Category")
     String Category;
+    @JsonProperty("Price")
     double Price;
+
     public Product(){};
     public Product(String Name, String Category,Brand brand ,double Price){
         this.Name = Name;

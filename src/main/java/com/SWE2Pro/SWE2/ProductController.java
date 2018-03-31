@@ -2,17 +2,17 @@ package com.SWE2Pro.SWE2;
 
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-
-@Controller
+@RestController
 public class ProductController {
 
     @Autowired
@@ -23,85 +23,58 @@ public class ProductController {
     private StoreRepository SR;
 
     @GetMapping("/addProduct")
-    public String addProduct(Model model) {
-
-        model.addAttribute("Product", new Product());
-        model.addAttribute("Brand", new Brand());
-
-        return "AdminProfile";
-
+    public Map addProduct() {
+        return Collections.singletonMap("status", "NotOk");
     }
 
 
     @PostMapping("/addProduct")
-    public String addProduct1(@ModelAttribute @Valid Product pro, BindingResult bindingResult,  Model model) {
+    public Map addProduct1(@RequestBody Product pro) {
 
         List<Product> products = PR.findByName(pro.Name);
 
         if(products.size() == 0) {
             PR.save(pro);
+            return Collections.singletonMap("status", "Ok");
         }
 
-        model.addAttribute("Product", new Product());
-        model.addAttribute("Brand", new Brand());
-
-        return "AdminProfile";
+        return Collections.singletonMap("status", "NotOk");
 
     }
 
     @RequestMapping("/viewStoreProduct/{storeName}/{productName}")
-    public String viewProduct(Model model, @PathVariable String storeName, @PathVariable String productName) {
-
-        model.addAttribute("Products", SPR.findByStore(storeName));
-        model.addAttribute("Stores",  SR.findAll());
+    public StoreProduct viewProduct(@PathVariable String storeName, @PathVariable String productName) {
 
         List<StoreProduct> pros = SPR.findByStore(storeName);
-
         StoreProduct sp = get(pros, productName);
-
         sp.setUsersViews(sp.getUsersViews() + 1);
-
         SPR.save(sp);
 
-        return "CustomerProfile";
+        return sp;
 
     }
 
     @RequestMapping("/buyStoreProduct/{storeName}/{productName}/{quantity}")
-    public String buyProduct(Model model, @PathVariable String storeName, @PathVariable String productName, @PathVariable int quantity){
-
-        model.addAttribute("Products", SPR.findByStore(storeName));
-        model.addAttribute("Stores",  SR.findAll());
+    public Map buyProduct(@PathVariable String storeName, @PathVariable String productName, @PathVariable int quantity){
 
         List<StoreProduct> pros = SPR.findByStore(storeName);
-
         StoreProduct sp = get(pros, productName);
-
         sp.setBoughtProducts(sp.getBoughtProducts() + quantity);
-
         SPR.save(sp);
 
-        return "CustomerProfile";
+        return Collections.singletonMap("status", "Ok");
 
     }
 
     @RequestMapping("/storeOwner/showStore/{storeName}")
-    public String showStore(Model model, @PathVariable String storeName, HttpServletRequest sessions){
-
-        model.addAttribute("Store", new Store());
-        model.addAttribute("StoreProduct", new StoreProduct());
-
-        List<Store> stores1 = SR.findAll();
-        model.addAttribute("Stores", getStores((User)sessions.getSession().getAttribute("owner"), stores1));
+    public List<StoreProduct> showStore(@PathVariable String storeName){
 
         List<StoreProduct> storeProducts = SPR.findByStore(storeName);
-        model.addAttribute("StoreProducts", storeProducts);
 
-        return "StoreOwnerProfile";
-
+        return storeProducts;
     }
 
-    public StoreProduct get(List<StoreProduct> pros, String productName){
+    private StoreProduct get(List<StoreProduct> pros, String productName){
 
         for(int i=0; i<pros.size(); ++i){
             if(pros.get(i).getProduct().equals(productName)){

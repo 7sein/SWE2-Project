@@ -1,6 +1,8 @@
 package com.SWE2Pro.SWE2;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.*;
 
 @Entity
@@ -11,8 +13,14 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long Id;
+    @JsonProperty("Name")
     protected String Name;
-    protected String UserName, Password, Type;
+    @JsonProperty("UserName")
+    protected String UserName;
+    @JsonProperty("Password")
+    protected String Password;
+    @JsonProperty("Type")
+    protected String Type;
 
     public User(){}
 

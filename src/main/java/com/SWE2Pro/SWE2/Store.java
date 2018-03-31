@@ -1,4 +1,6 @@
 package com.SWE2Pro.SWE2;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.*;
 
 @Entity
@@ -7,11 +9,14 @@ public class Store {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     int Id;
+    @JsonProperty("Name")
     String Name;
 
     @ManyToOne(targetEntity = User.class)
     User storeOwner;
+    @JsonProperty("Location")
     String Location;
+    @JsonProperty("Type")
     String Type;
 
 

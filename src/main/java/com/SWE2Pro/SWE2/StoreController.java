@@ -2,16 +2,19 @@ package com.SWE2Pro.SWE2;
 
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
-@Controller
+@RestController
 public class StoreController {
 
     @Autowired
@@ -26,68 +29,45 @@ public class StoreController {
     private UserRepository UR;
 
 
-
     @GetMapping("/addstore")
-    public String addstore(Model model) {
+    public Map addstore(Model model) {
+        return Collections.singletonMap("status", "NotOk");
 
-        model.addAttribute("Store", new Store());
-        model.addAttribute("StoreProduct", new StoreProduct());
-        return "index";
 
     }
 
     @PostMapping("/addstore")
-    public String addstore1(@ModelAttribute @Valid Store sto, Model model, HttpServletRequest sessions) {
+    public Map addstore1(@RequestBody Store sto, HttpServletRequest sessions) {
+
 
         List<Store> stores = SR.findByName(sto.Name);
-        model.addAttribute("Store", new Store());
-        model.addAttribute("StoreProduct", new StoreProduct());
-        List<Store> stores1 = SR.findAll();
-        model.addAttribute("Stores", getStores((User)sessions.getSession().getAttribute("owner"), stores1));
-        model.addAttribute("StoreProducts", new ArrayList<StoreProduct>());
-
 
         if(stores.size() == 0){
             sto.setStoreOwner((User)sessions.getSession().getAttribute("owner"));
             SR.save(sto);
+            return Collections.singletonMap("status", "Ok");
+
         }
 
-
-        return "StoreOwnerProfile";
+        return Collections.singletonMap("status", "NotOk");
 
     }
 
     @RequestMapping("/showStore/{storeName}")
-    public String showStore(Model model, @PathVariable String storeName) {
-        model.addAttribute("Products", SPR.findByStore(storeName));
-        model.addAttribute("Stores",  SR.findAll());
-        return "CustomerProfile";
+    public List<StoreProduct> showStore(@PathVariable String storeName) {
+        List<StoreProduct> Products = SPR.findByStore(storeName);
+        return Products;
     }
 
     @GetMapping("/addProductToStore")
-    public String addProductToStore(Model model, HttpServletRequest sessions){
-        model.addAttribute("Store", new Store());
-        model.addAttribute("StoreProduct", new StoreProduct());
-        List<Store> stores1 = SR.findAll();
-        model.addAttribute("Stores", getStores((User)sessions.getSession().getAttribute("owner"), stores1));
-        model.addAttribute("StoreProducts", new ArrayList<StoreProduct>());
+    public Map addProductToStore(){
 
-
-        List<Store> stores = SR.findAll();
-        model.addAttribute("Stores", getStores(((User)sessions.getSession().getAttribute("owner")), stores));
-        return "StoreOwnerProfile";
+        return Collections.singletonMap("status", "NotOk");
 
     }
 
     @PostMapping("/addProductToStore")
-    public String addProductToStore1(@ModelAttribute @Valid StoreProduct SP, Model model, HttpServletRequest sessions) {
-
-        model.addAttribute("Store", new Store());
-        model.addAttribute("StoreProduct", new StoreProduct());
-        List<Store> stores1 = SR.findAll();
-        model.addAttribute("Stores", getStores((User)sessions.getSession().getAttribute("owner"), stores1));
-        model.addAttribute("StoreProducts", new ArrayList<Store>());
-
+    public Map addProductToStore1(@RequestBody StoreProduct SP){
 
         List<Product> products = PR.findByName(SP.Product);
         List<Brand>   brands   = BR.findByName(SP.Brand);
@@ -95,7 +75,7 @@ public class StoreController {
 
 
         if(products.size() == 0 || brands.size() == 0 || stores.size() == 0) {
-            return "StoreOwnerProfile";
+            return Collections.singletonMap("status", "NotOk");
         }
 
         SP.setStoreID(stores.get(0).getId());
@@ -104,11 +84,32 @@ public class StoreController {
 
         SPR.save(SP);
 
-        return "StoreOwnerProfile";
+        return Collections.singletonMap("status", "Ok");
 
     }
 
-    public List<Store> getStores(User owner, List<Store> stores){
+    @RequestMapping("/getStoresStatistics")
+    public List<StoreProduct> getStoresProducts(HttpServletRequest sessions){
+
+        List<Store> myStores = getStores((User)sessions.getSession().getAttribute("owner"), SR.findAll());
+
+        List<StoreProduct> ret = new ArrayList<>();
+
+        for (Store S: myStores){
+
+            List<StoreProduct> thisStoreProducts = SPR.findByStore(S.Name);
+
+            for(StoreProduct sp: thisStoreProducts){
+                ret.add(sp);
+            }
+
+        }
+
+        return ret;
+
+    }
+
+    private List<Store> getStores(User owner, List<Store> stores){
 
         List<Store> stores1 = new ArrayList<>();
 

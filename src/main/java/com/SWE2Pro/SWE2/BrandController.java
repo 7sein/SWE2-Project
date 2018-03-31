@@ -1,38 +1,39 @@
 package com.SWE2Pro.SWE2;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
-@Controller
+@RestController
 public class BrandController {
 
     @Autowired
     private BrandRepository BR;
 
+
     @GetMapping("/addBrand")
-    public String addBrand(Model model) {
-        model.addAttribute("Product", new Product());
-        model.addAttribute("Brand", new Brand());
-        return "AdminProfile";
+    public Map addBrand() {
+        return Collections.singletonMap("status", "NotOk");
     }
 
     @PostMapping("/addBrand")
-    public String addBrand1(@ModelAttribute Brand brand, Model model) {
+    public Map addBrand1(@RequestBody Brand brand) {
 
-        model.addAttribute("Product", new Product());
-        model.addAttribute("Brand", new Brand());
         List<Brand> brands = BR.findByName(brand.getName());
         if(brands.size() == 0){
             BR.save(brand);
+            return Collections.singletonMap("status", "Ok");
         }
 
-        return "AdminProfile";
+        return Collections.singletonMap("status", "NotOk");
+
     }
 
 }

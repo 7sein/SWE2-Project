@@ -1,18 +1,19 @@
 package com.SWE2Pro.SWE2;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
-@Controller
+@RestController
 public class UserController {
 
     @Autowired
@@ -21,90 +22,64 @@ public class UserController {
     private StoreRepository SR;
 
 
-    @RequestMapping("/")
-    public String index(Model model){
-        model.addAttribute("User", new User());
-        return "index";
-    }
-
     @GetMapping("/login")
-    public String Login(Model model) {
-        model.addAttribute("User", new User());
-        return "index";
+    public Map Login() {
+
+        return Collections.singletonMap("status", "NotOk");
+
     }
 
     @PostMapping("/login")
-    public String Login1(@ModelAttribute User usr, Model model , HttpServletRequest s) {
+    public Map Login1(@RequestBody User usr, HttpServletRequest s) {
+
+        System.out.println(usr.UserName + " " + usr.Password);
 
         List<User> ret = UR.findByName(usr.UserName);
 
         if(ret.size() > 0){
 
             if(!ret.get(0).Password.equals(usr.Password)){
-                model.addAttribute("User", new User());
-                return "index";
+                return Collections.singletonMap("status", "NotOk");
+
             }
+
+            s.getSession().setAttribute("owner" ,ret.get(0));
 
             if(ret.get(0).Type.equals("Admin")) {
-                model.addAttribute("Product", new Product());
-                model.addAttribute("Brand", new Brand());
-                //s.getSession().setAttribute("owner" ,usr);
-                return "AdminProfile";
+                return Collections.singletonMap("status", "Admin");
             } else if(ret.get(0).Type.equals("StoreOwner")){
-
-                model.addAttribute("Store", new Store());
-                model.addAttribute("StoreProduct", new StoreProduct());
-                List<Store> stores1 = SR.findAll();
-                //System.out.println(getStores(ret.get(0), stores1).size());
-                model.addAttribute("Stores", getStores(ret.get(0), stores1));
-                model.addAttribute("StoreProducts", new ArrayList<StoreProduct>());
-
-                s.getSession().setAttribute("owner" ,ret.get(0));
-
-                return "StoreOwnerProfile";
-
+                return Collections.singletonMap("status", "StoreOwner");
             } else{
-
-                model.addAttribute("Products", new ArrayList<Product>());
-                model.addAttribute("Stores",  SR.findAll());
-                //s.getSession().setAttribute("owner" ,usr);
-                return "CustomerProfile";
-
+                return Collections.singletonMap("status", "Customer");
             }
 
-        } else {
-
-           // model.addAttribute("Stores", UR.findAll());
-            model.addAttribute("User", new User());
-
-            return "index";
-
         }
+
+        return Collections.singletonMap("status", "NotOk");
 
     }
 
     @GetMapping("/SignUp")
-    public String SignUp(Model model) {
-        model.addAttribute("User", new User());
-        return "index";
+    public Map SignUp() {
+        return Collections.singletonMap("status", "NotOk");
+
     }
 
     @PostMapping("/SignUp")
-    public String SignUp1(@ModelAttribute User usr, Model model) {
+    public Map SignUp1(@RequestBody User usr) {
 
         List<User> ret = UR.findByName(usr.UserName);
-        model.addAttribute("User", new User());
 
         if(ret.size() == 0){
             UR.save(usr);
-            return "index";
+            return Collections.singletonMap("status", "Ok");
         } else {
-            return "index";
+            return Collections.singletonMap("status", "Ok");
         }
 
     }
 
-    public List<Store> getStores(User owner, List<Store> stores){
+    private List<Store> getStores(User owner, List<Store> stores){
 
         List<Store> stores1 = new ArrayList<>();
 

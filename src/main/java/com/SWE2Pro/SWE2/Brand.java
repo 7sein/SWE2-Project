@@ -1,6 +1,8 @@
 package com.SWE2Pro.SWE2;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,7 +15,10 @@ public class Brand {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     int Id;
-    String Name, Category;
+    @JsonProperty("Name")
+    String Name;
+    @JsonProperty("Category")
+    String Category;
 
     Brand(){}
 
