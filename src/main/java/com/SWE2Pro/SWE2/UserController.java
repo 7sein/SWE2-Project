@@ -32,7 +32,7 @@ public class UserController {
     @PostMapping("/login")
     public Map Login1(@RequestBody User usr, HttpServletRequest s) {
 
-        System.out.println(usr.UserName + " " + usr.Password);
+        //System.out.println(usr.UserName + " " + usr.Password);
 
         List<User> ret = UR.findByName(usr.UserName);
 
