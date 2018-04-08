@@ -8,7 +8,7 @@ import javax.persistence.*;
 public class Product {
 
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
-    int Id;
+    Long Id;
 
     @JsonProperty("Name")
     String Name;
@@ -17,14 +17,15 @@ public class Product {
     @JsonProperty("Price")
     double Price;
 
-    public Product(){};
-    public Product(String Name, String Category,Brand brand ,double Price){
+    public Product(){}
+
+    public Product(String Name, String Category ,double Price){
         this.Name = Name;
         this.Category = Category;
         this.Price = Price;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         Id = id;
     }
 
@@ -40,13 +41,16 @@ public class Product {
         Price = price;
     }
 
-    public int getId(){ return Id; }
+    public Long getId(){ return Id; }
+
     public String getName(){
         return Name;
     }
+
     public String getCategory(){
         return Category;
     }
+
     public double getPrice(){
         return Price;
     }

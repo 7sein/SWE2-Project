@@ -2,15 +2,14 @@ package com.SWE2Pro.SWE2;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Entity
 public class StoreOwner extends User {
-
-
-    @OneToMany(cascade = CascadeType.ALL, targetEntity = Store.class, mappedBy = "storeOwner")
-    private Set<Store> stores;
 
     public StoreOwner(){}
 
@@ -18,15 +17,5 @@ public class StoreOwner extends User {
         super(Name, UserName, Password);
         this.Type = "StoreOwner";
     }
-
-    public Set<Store> getStores() {
-        return stores;
-    }
-
-    public void setStores(Set<Store> stores) {
-        this.stores = stores;
-    }
-
-
 
 }

@@ -20,6 +20,8 @@ public class UserController {
     private UserRepository UR;
     @Autowired
     private StoreRepository SR;
+    @Autowired
+    private Stores_StoreOwners_Repository SSR;
 
 
     @GetMapping("/login")
@@ -79,19 +81,25 @@ public class UserController {
 
     }
 
-    private List<Store> getStores(User owner, List<Store> stores){
+    @RequestMapping("/addNewCollaporator/{storeName}/{userName}")
+    public Map addNewCollaporator(@PathVariable String storeName, @PathVariable String userName, HttpServletRequest s){
 
-        List<Store> stores1 = new ArrayList<>();
+        //System.out.println(storeName + " " + userName);
 
-        for(int i=0; i<stores.size(); ++i){
+        List<Store> stores = SR.findByName(storeName);
+        List<User> users = UR.findByName(userName);
 
-            if(stores.get(i).getStoreOwner().equals(owner)){
-                stores1.add(stores.get(i));
-            }
+        if(stores.size() == 0 || users.size() == 0)
+            return Collections.singletonMap("status", "notOk0");
 
-        }
+        //System.out.println(users.get(0).getType());
 
-        return stores1;
+        if(!users.get(0).getType().equals("StoreOwner"))
+            return Collections.singletonMap("status", "notOk1");
+
+        SSR.save(new Stores_StoreOwners(stores.get(0).getId(), users.get(0).getId()));
+
+        return Collections.singletonMap("status", "Ok");
 
     }
 

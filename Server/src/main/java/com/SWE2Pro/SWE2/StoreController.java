@@ -27,24 +27,27 @@ public class StoreController {
     private StoreProductRepository SPR;
     @Autowired
     private UserRepository UR;
+    @Autowired
+    private Stores_StoreOwners_Repository SSR;
+    @Autowired
+    private ActionsInStoresRepository ASR;
 
 
     @GetMapping("/addstore")
     public Map addstore(Model model) {
         return Collections.singletonMap("status", "NotOk");
-
-
     }
 
     @PostMapping("/addstore")
-    public Map addstore1(@RequestBody Store sto, HttpServletRequest sessions) {
-
+    public Map addstore1(@RequestBody Store sto, HttpServletRequest s) {
 
         List<Store> stores = SR.findByName(sto.Name);
 
         if(stores.size() == 0){
-            sto.setStoreOwner((User)sessions.getSession().getAttribute("owner"));
             SR.save(sto);
+            Long storeId = SR.findByName(sto.Name).get(0).getId();
+            Long storeOwnerId = ((User)s.getSession().getAttribute("owner")).getId();
+            SSR.save(new Stores_StoreOwners(storeId, storeOwnerId));
             return Collections.singletonMap("status", "Ok");
 
         }
@@ -53,10 +56,20 @@ public class StoreController {
 
     }
 
-    @RequestMapping("/showStore/{storeName}")
-    public List<StoreProduct> showStore(@PathVariable String storeName) {
-        List<StoreProduct> Products = SPR.findByStore(storeName);
-        return Products;
+    @RequestMapping("/getAllStores")
+    public List<Store> getAllStores(HttpServletRequest s){
+
+        Long id = ((User)s.getSession().getAttribute("owner")).getId();
+        List<Stores_StoreOwners> SS = SSR.getStores(id);
+
+        System.out.println(SS.size());
+
+        List<Store> ret = new ArrayList<>();
+        for(Stores_StoreOwners ss: SS){
+            ret.add(SR.findById(ss.getStoreId()).get());
+        }
+        return ret;
+
     }
 
     @GetMapping("/addProductToStore")
@@ -67,12 +80,11 @@ public class StoreController {
     }
 
     @PostMapping("/addProductToStore")
-    public Map addProductToStore1(@RequestBody StoreProduct SP){
+    public Map addProductToStore1(@RequestBody StoreProduct SP, HttpServletRequest s){
 
         List<Product> products = PR.findByName(SP.Product);
         List<Brand>   brands   = BR.findByName(SP.Brand);
         List<Store>   stores   = SR.findByName(SP.Store);
-
 
         if(products.size() == 0 || brands.size() == 0 || stores.size() == 0) {
             return Collections.singletonMap("status", "NotOk");
@@ -84,44 +96,45 @@ public class StoreController {
 
         SPR.save(SP);
 
+        Long storeId = SPR.findByStore(SP.Store).get(0).getStoreID();
+        String user = ((User)s.getSession().getAttribute("owner")).getUserName();
+        String Action = user + " added " + SP.Product;
+
+        ASR.save(new ActionsInStores(storeId, Action));
+
         return Collections.singletonMap("status", "Ok");
 
     }
 
-    @RequestMapping("/getStoresStatistics")
-    public List<StoreProduct> getStoresProducts(HttpServletRequest sessions){
+    @RequestMapping("/getStoreProducts/{storeName}")
+    public List<StoreProduct> getStoreProducts(@PathVariable String storeName, HttpServletRequest s){
 
-        List<Store> myStores = getStores((User)sessions.getSession().getAttribute("owner"), SR.findAll());
-
-        List<StoreProduct> ret = new ArrayList<>();
-
-        for (Store S: myStores){
-
-            List<StoreProduct> thisStoreProducts = SPR.findByStore(S.Name);
-
-            for(StoreProduct sp: thisStoreProducts){
-                ret.add(sp);
-            }
-
-        }
-
-        return ret;
+        return SPR.findByStore(storeName);
 
     }
 
-    private List<Store> getStores(User owner, List<Store> stores){
+    @RequestMapping("/checkOriginal/{storeName}")
+    public Map checkOriginal(@PathVariable String storeName, HttpServletRequest s){
 
-        List<Store> stores1 = new ArrayList<>();
+        Long ownerId = ((User)s.getSession().getAttribute("owner")).getId();
+        Long storeId = SR.findByName(storeName).get(0).getId();
 
-        for(int i=0; i<stores.size(); ++i){
+        System.out.println(SSR.getStoreOwners(storeId).get(0).getStoreOwnerId());
 
-            if(stores.get(i).getStoreOwner().equals(owner)){
-                stores1.add(stores.get(i));
-            }
-
+        if (SSR.getStoreOwners(storeId).get(0).getStoreOwnerId() == ownerId){
+            return Collections.singletonMap("status", "Ok");
         }
 
-        return stores1;
+        return Collections.singletonMap("status", "notOk");
+
+    }
+
+    @RequestMapping("/getActions/{storeName}")
+    public List<ActionsInStores> getActions(@PathVariable String storeName){
+
+        Long storeId = SR.findByName(storeName).get(0).getId();
+
+        return ASR.getActions(storeId);
 
     }
 

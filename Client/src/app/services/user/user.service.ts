@@ -26,6 +26,13 @@ export class UserService {
         );
     }
     
+    addNewCollaporator(storeName, userName){
+        return this.http.get(
+         '/addNewCollaporator/' + storeName + '/' + userName,
+            { headers: this.headers }
+        );
+    }
+    
     
 
 }

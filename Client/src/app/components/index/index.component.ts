@@ -47,6 +47,10 @@ export class IndexComponent{
         this.userService.SignUp(this.user1).subscribe(
             data => {
                 console.log(data);
+                this.user1.Name = '';
+                this.user1.UserName = '';
+                this.user1.Password = '';
+                this.user1.Type = '';
             },
             error => {
                 console.log(error);

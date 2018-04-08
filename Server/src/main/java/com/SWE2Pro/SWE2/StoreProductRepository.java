@@ -10,6 +10,11 @@ public interface StoreProductRepository extends CrudRepository<StoreProduct, Lon
     @Query("select u from StoreProduct u where u.Store = ?1")
     List<StoreProduct> findByStore(String Store);
 
+    @Query("select u from StoreProduct u where u.Product = ?1")
+    List<StoreProduct> findByProduct(String Product);
+
+
+
 }
 
 

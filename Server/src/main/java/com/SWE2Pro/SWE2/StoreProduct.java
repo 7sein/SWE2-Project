@@ -25,12 +25,12 @@ public class StoreProduct {
     @JsonProperty("Store")
     String Store;
 
-    @JsonProperty("Brand")
-    int StoreID;
-    @JsonProperty("Brand")
-    int ProductID;
-    @JsonProperty("Brand")
-    int BrandID;
+    @JsonProperty("StoreID")
+    Long StoreID;
+    @JsonProperty("ProductID")
+    Long ProductID;
+    @JsonProperty("BrandID")
+    Long BrandID;
 
     public StoreProduct(){
         BoughtProducts = 0;
@@ -101,28 +101,28 @@ public class StoreProduct {
         BoughtProducts = boughtProducts;
     }
 
-    public int getStoreID() {
+    public Long getStoreID() {
         return StoreID;
     }
 
-    public void setStoreID(int storeID) {
+    public void setStoreID(Long storeID) {
         StoreID = storeID;
     }
 
 
-    public int getProductID() {
+    public Long getProductID() {
         return ProductID;
     }
 
-    public void setProductID(int productID) {
+    public void setProductID(Long productID) {
         ProductID = productID;
     }
 
-    public int getBrandID() {
+    public Long getBrandID() {
         return BrandID;
     }
 
-    public void setBrandID(int brandID) {
+    public void setBrandID(Long brandID) {
         BrandID = brandID;
     }
 

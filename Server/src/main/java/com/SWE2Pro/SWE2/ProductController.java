@@ -19,8 +19,6 @@ public class ProductController {
     private ProductRepository PR;
     @Autowired
     private StoreProductRepository SPR;
-    @Autowired
-    private StoreRepository SR;
 
     @GetMapping("/addProduct")
     public Map addProduct() {
@@ -60,18 +58,31 @@ public class ProductController {
         List<StoreProduct> pros = SPR.findByStore(storeName);
         StoreProduct sp = get(pros, productName);
         sp.setBoughtProducts(sp.getBoughtProducts() + quantity);
+
         SPR.save(sp);
+
 
         return Collections.singletonMap("status", "Ok");
 
     }
 
-    @RequestMapping("/storeOwner/showStore/{storeName}")
-    public List<StoreProduct> showStore(@PathVariable String storeName){
+    @RequestMapping("/getProduct/{storeName}/{productName}")
+    public StoreProduct getProduct(@PathVariable String storeName, @PathVariable String productName){
 
-        List<StoreProduct> storeProducts = SPR.findByStore(storeName);
+        List<StoreProduct> products = SPR.findByStore(storeName);
 
-        return storeProducts;
+        for(StoreProduct sp: products){
+            if(sp.Product.equals(productName)){
+                return sp;
+            }
+        }
+
+        return null;
+    }
+
+    @RequestMapping("/getAllProducts")
+    public List<StoreProduct> getAllProducts(){
+        return (List<StoreProduct>) SPR.findAll();
     }
 
     private StoreProduct get(List<StoreProduct> pros, String productName){
@@ -85,23 +96,5 @@ public class ProductController {
         return null;
 
     }
-
-    public List<Store> getStores(User owner, List<Store> stores){
-
-        List<Store> stores1 = new ArrayList<>();
-
-        for(int i=0; i<stores.size(); ++i){
-
-            if(stores.get(i).getStoreOwner().equals(owner)){
-                stores1.add(stores.get(i));
-            }
-
-        }
-
-        return stores1;
-
-    }
-
-
 
 }

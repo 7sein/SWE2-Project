@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { StoreService } from '../../services/store/store.service';
+import { UserService } from '../../services/user/user.service';
 
 @Component({
   selector: 'app-storeowner',
@@ -10,34 +11,83 @@ import { StoreService } from '../../services/store/store.service';
 export class StoreownerComponent {
 
     
-    stores: store[];
-    storeProducts: storeProduct[];
+    stores: any;
+    storeProducts: any;
+    original: boolean;
+    actions: any;
     
     
-    constructor(private storeSerice: StoreService) {
+    constructor(private storeService: StoreService, private userService: UserService) {
         
-        this.storeSerice.getStoresStatistics().subscribe(
+        this.getAllStores();
+        
+    }
+    
+    getAllStores(){
+        this.storeService.getAllStores().subscribe(
             data => {
-                this.storeProducts = data as storeProduct[];
-                for(let SP of this.storeProducts){
-                    let flag: boolean = false;
-                    for(let S of this.stores){
-                        if(S.Name == SP.Store){
-                            S.totalUsersViews += SP.UsersViews;
-                            S.totalBoughtProducts += SP.BoughtProducts;
-                            flag = true;
-                            break;
-                        }
-                    }
-                    if(flag == false){
-                        let s: store;
-                        s.Name = SP.Store;
-                        s.totalUsersViews = SP.UsersViews;
-                        s.totalBoughtProducts = SP.BoughtProducts;
-                        this.stores[this.stores.length] = s;
-                    }
-                }
+                this.stores = data;
+                console.log(this.stores);
+            },
+            error => {
+                console.log(error);
+            }
+        );
+    }
+    
+    
+    Store = { Name: '', Location: '', Type: '' };
+    
+    addStore(){
+        this.storeService.addStore(this.Store).subscribe(
+            data => {
+                console.log(data);
+                this.getAllStores();
+                this.Store.Name = '';
+                this.Store.Location = '';
+                this.Store.Type = '';
                 
+            },
+            error => {
+                console.log(error);
+            }
+        );
+    }
+    
+    getStore(storeName){
+        console.log(storeName);
+        this.storeService.getStoreProducts(storeName).subscribe( // getProducts
+            data => {
+                console.log(data);
+                this.storeProducts = data;
+            },
+            error => {
+                console.log(error);
+            }
+        );
+        
+        this.storeService.checkOriginal(storeName).subscribe( // getActions of original stroOwner
+            data => {
+                
+                console.log(data);
+                
+                if(data.status === "Ok"){
+                    
+                    this.original = true;
+                    this.storeService.getStoreActions(storeName).subscribe(
+                        data => {
+                            console.log(data);
+                            this.actions = data;
+                        },
+                        error => {
+                            console.log(data);
+                        }
+                    );
+                
+                } else {
+                    this.original = false;
+                }
+                //console.log(this.original);
             },
             error => {
                 console.log(error);
@@ -47,17 +97,40 @@ export class StoreownerComponent {
     }
     
     
-    Store = { Name: '', Location: '', Type: '' };
+    Product = {Product: '', Brand: '', Store: ''};
     
-    addStore(){
-        this.storeSerice.addStore(this.Store).subscribe(
+    addProductToStore(){
+        
+        this.storeService.addProductToStore(this.Product).subscribe(
             data => {
                 console.log(data);
+                this.Product.Product = '';
+                this.Product.Brand = '';
+                this.Product.Store = '';
             },
             error => {
                 console.log(error);
             }
         );
+        
+    }
+    
+    storeName = '';
+    collaporatorUserName = '';
+    
+    addNewCollaporator(){
+        this.userService.addNewCollaporator(this.storeName, this.collaporatorUserName).subscribe(
+            data => {
+                console.log(data);
+                this.storeName = '';
+                this.collaporatorUserName = '';
+                
+            },
+            error => {
+                console.log(error);
+            }
+        );
+        
     }
     
  

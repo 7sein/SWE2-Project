@@ -13,10 +13,67 @@
 
 <br><br><hr><br><br>
 
+<h2> add Product to Store </h2>
+<form (ngSubmit)="addProductToStore()">
+    
+    <input type="text" placeholder="Product" [(ngModel)]="Product.Product" name="Product"/> 
+    
+    <input type="text" placeholder="Brand" [(ngModel)]="Product.Brand" name="Brand" /> 
+    
+    <input type="text" placeholder="Store" [(ngModel)]="Product.Store" name="Store" /> 
+    
+    <input type="submit" value="add" />
+    
+</form>
+
+<br><br><hr><br><br>
+
+<h2> My Stores </h2>
+
 <ul *ngIf="stores">
    <li *ngFor="let store of stores">
-       {{store.Name}} <br>
-       {{store.totalUsersViews}} <br>
-       {{store.totalBoughtProducts}}
+       <a [routerLink]="storeOwner" (click)="getStore(store.Name)">                 {{store.Name}} 
+       </a>
    </li>
 </ul>
+
+
+<div *ngIf="storeProducts">
+    
+    <h2> Products of {{storeProducts[0].Store}} </h2>
+    
+    <ul>
+       <li *ngFor="let storeProduct of storeProducts">
+           &nbsp;ProductName: &nbsp;{{storeProduct.Product}} <br />
+           &nbsp;Boughts: &nbsp;{{storeProduct.boughtProducts}} <br />
+           &nbsp;Views: &nbsp;{{storeProduct.usersViews}} <br />
+       </li>
+    </ul>
+    
+    <div *ngIf="original">
+        <h2> History of Actions in {{storeProducts[0].Store}} </h2>
+        
+        <ul>
+           <li *ngFor="let action of actions">
+               &nbsp;{{action.action}}
+           </li>
+        </ul>
+        
+    </div>
+    
+</div>
+
+<br><br><hr><br><br>
+
+
+
+<h2> add Collaporator to Store </h2>
+<form (ngSubmit)="addNewCollaporator()">
+    
+    <input type="text" placeholder="Store Name" [(ngModel)]="storeName" name="storeName"/> 
+    
+    <input type="text" placeholder="New Collaporator's User Name" [(ngModel)]="collaporatorUserName" name="collaporatorUserName" />
+    
+    <input type="submit" value="add" />
+    
+</form>

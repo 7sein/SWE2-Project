@@ -14,7 +14,7 @@ public class Brand {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    int Id;
+    Long Id;
     @JsonProperty("Name")
     String Name;
     @JsonProperty("Category")
@@ -27,11 +27,11 @@ public class Brand {
         this.Category = category;
     }
 
-    public int getId() {
+    public Long getId() {
         return Id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         Id = id;
     }
 

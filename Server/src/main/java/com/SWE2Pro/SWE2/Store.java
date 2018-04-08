@@ -2,18 +2,18 @@ package com.SWE2Pro.SWE2;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Store {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    int Id;
+    Long Id;
     @JsonProperty("Name")
     String Name;
 
-    @ManyToOne(targetEntity = User.class)
-    User storeOwner;
     @JsonProperty("Location")
     String Location;
     @JsonProperty("Type")
@@ -26,11 +26,11 @@ public class Store {
         this.Type="";
     }
 
-    public int getId() {
+    public Long getId() {
         return Id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.Id = id;
     }
 
@@ -41,15 +41,6 @@ public class Store {
     public void setName(String name) {
         this.Name = name;
     }
-
-    public User getStoreOwner() {
-        return storeOwner;
-    }
-
-    public void setStoreOwner(User storeOwner) {
-        this.storeOwner = storeOwner;
-    }
-
 
     public String getLocation() {
         return Location;
@@ -66,5 +57,6 @@ public class Store {
     public void setType(String type) {
         this.Type = type;
     }
+
 
 }

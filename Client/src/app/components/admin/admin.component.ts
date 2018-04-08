@@ -19,6 +19,9 @@ export class AdminComponent {
         this.productService.addProduct(this.Product).subscribe(
             data => {
                 console.log(data);
+                this.Product.Name = '';
+                this.Product.Category = '';
+                this.Product.Price = 0.0;
             },
             error => {
                 console.log(error);
@@ -32,6 +35,8 @@ export class AdminComponent {
         this.brandService.addBrand(this.Brand).subscribe(
             data => {
                 console.log(data);
+                this.Brand.Name = '';
+                this.Brand.Category = '';
             },
             error => {
                 console.log(error);

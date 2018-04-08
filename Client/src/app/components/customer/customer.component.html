@@ -1,0 +1,38 @@
+<div *ngIf="allProducts">
+
+    <h2> All Products </h2>
+    
+    <ul>
+        <li *ngFor="let product of allProducts">
+            <a [routerLink]="customer" 
+               (click)="getProduct(product.product, product.store)"> 
+                
+                {{product.product}} 
+            
+            </a>
+        </li>
+    </ul>
+    
+    <div *ngIf="product">
+        
+        <p> Name: {{product.product}} </p>
+        <p> Store: {{product.store}} </p>
+        <p> Brand: {{product.brand}} </p>
+        
+        <br /><br />
+        
+        <form (ngSubmit)="buyProduct(product.product, product.store)">
+            
+            <input type="number" placeholder="qunatity" [(ngModel)]="quantity" name="qunatity" (change)="check()"/>
+            
+            <input type="text" placeholder="shipping address" [(ngModel)]="address" name="address" (change)="check()"/> 
+            
+            <input type="checkbox" (change)="changeEvent($event)" name="address"/> 
+            
+            <input type="submit" [attr.disabled]="disabled ? 'disabled' : null" value="buy">
+        
+        </form>
+        
+    </div>
+    
+</div>

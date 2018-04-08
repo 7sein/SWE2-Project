@@ -12,15 +12,8 @@ export class StoreService {
     
     addStore(store){ // return status if store is added
         return this.http.post(  
-         '/addStore', 
+         '/addstore', 
          JSON.stringify(store),
-         { headers: this.headers } 
-        );
-    }
-    
-    showStore(store){ // return list of store products
-        return this.http.get(  
-         '/showStore/' + store.name,
          { headers: this.headers } 
         );
     }
@@ -33,11 +26,33 @@ export class StoreService {
         );
     }
     
-    getStoresStatistics(){
+    getAllStores(){
         return this.http.get(
-         '/getStoresStatistics',
+         '/getAllStores',
          { headers: this.headers }
         );
     }
+    
+    getStoreProducts(storeName){
+        return this.http.get(
+         '/getStoreProducts/' + storeName,
+         { headers: this.headers }
+        );
+    }
+    
+    checkOriginal(storeName){
+        return this.http.get(
+         '/checkOriginal/' + storeName,
+          { headers: this.headers }
+        );
+    }
+    
+    getStoreActions(storeName){
+        return this.http.get(
+         '/getActions/' + storeName,
+          { headers: this.headers }
+        );
+    }
+    
 
 }

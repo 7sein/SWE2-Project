@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
-
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class ProductService {
@@ -14,31 +12,39 @@ export class ProductService {
     addProduct(Product){ // return status if the product is added
         return this.http.post(  
          '/addProduct', 
-         JSON.stringify(Product), 
+         Product, 
          { headers: this.headers } 
         );
     }
     
-    viewStoreProduct(viewProduct){ // return storeProduct
-        return this.http.get(  
-         '/viewStoreProduct/'+viewProduct.storeName+'/'+viewProduct.productName, 
-         { headers: this.headers } 
+    getAllProducts(){
+        return this.http.get(
+         '/getAllProducts',
+         { headers: this.headers }
         );
     }
     
-    buyStoreProduct(buyProduct){ //return status if the product is bought
+    getProduct(productName, storeName){
+        return this.http.get(
+         '/getProduct/' + storeName + '/' + productName,
+         { headers: this.headers }
+        );
+    }
+    
+    buyProduct(productName, storeName, quantity){
         return this.http.get( 
-         '/viewStoreProduct/'+buyProduct.storeName+'/'+
-         buyProduct.productName+'/'+buyProduct.quantity, 
+         '/buyStoreProduct/' + storeName + '/'+ productName + '/' + quantity, 
          { headers: this.headers } 
         );
     }
     
-    showStore(store){ // return list of storeProducts
-        return this.http.get(  
-         '/storeOwner/showStore/' + store.name, 
-         { headers: this.headers } 
+    
+    viewProduct(productName, storeName){
+        return this.http.get(
+         '/viewStoreProduct/' + storeName + '/' + productName,
+          { headers: this.headers }
         );
     }
-
+    
+    
 }
