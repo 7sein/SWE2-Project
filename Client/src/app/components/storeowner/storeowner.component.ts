@@ -15,6 +15,7 @@ export class StoreownerComponent {
     storeProducts: any;
     original: boolean;
     actions: any;
+    res: any;
     
     
     constructor(private storeService: StoreService, private userService: UserService) {
@@ -69,9 +70,11 @@ export class StoreownerComponent {
         this.storeService.checkOriginal(storeName).subscribe( // getActions of original stroOwner
             data => {
                 
+
                 console.log(data);
                 
-                if(data.status === "Ok"){
+                this.res = data;
+                if(this.res.status === "Ok"){
                     
                     this.original = true;
                     this.storeService.getStoreActions(storeName).subscribe(

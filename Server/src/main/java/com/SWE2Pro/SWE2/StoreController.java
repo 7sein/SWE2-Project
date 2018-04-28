@@ -68,6 +68,7 @@ public class StoreController {
         for(Stores_StoreOwners ss: SS){
             ret.add(SR.findById(ss.getStoreId()).get());
         }
+
         return ret;
 
     }

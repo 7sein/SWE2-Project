@@ -61,7 +61,6 @@ public class ProductController {
 
         SPR.save(sp);
 
-
         return Collections.singletonMap("status", "Ok");
 
     }
@@ -80,10 +79,12 @@ public class ProductController {
         return null;
     }
 
+
     @RequestMapping("/getAllProducts")
     public List<StoreProduct> getAllProducts(){
         return (List<StoreProduct>) SPR.findAll();
     }
+
 
     private StoreProduct get(List<StoreProduct> pros, String productName){
 
