@@ -15,6 +15,7 @@ export class StoreownerComponent {
     storeProducts: any;
     original: boolean;
     actions: any;
+	res: any;
     
     
     constructor(private storeService: StoreService, private userService: UserService) {
@@ -70,7 +71,7 @@ export class StoreownerComponent {
             data => {
                 
                 console.log(data);
-                
+                this.res = data;
                 if(data.status === "Ok"){
                     
                     this.original = true;
